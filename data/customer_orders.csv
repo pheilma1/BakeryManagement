@@ -1,0 +1,57 @@
+﻿Customer,Item,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,print_lbl
+FL - Main,Almond Croissants,12,12,0,6,18,0,TRUE
+FL - Main,Apple Turnovers,12,12,0,6,18,0,TRUE
+FL - Main,Blueberry Muffins,48,48,0,24,0,0,TRUE
+FL - Main,Chocolate Chip Muffins,48,48,0,24,0,0,TRUE
+FL - Main,Blueberry Scones,15,16,0,8,18,0,TRUE
+FL - Main,Raspberry Scones,15,16,0,8,18,0,TRUE
+FL - Main,Lemon Cheese Danish,12,12,0,6,0,0,TRUE
+FL - Main,Spinach Feta,18,16,0,10,0,0,TRUE
+FL - Main,Cranberry-Orange Muffins,24,24,0,12,0,0,TRUE
+FL - Main,Chocolate Croissants,0,0,0,0,18,0,TRUE
+FL - Main,Cutout Cookies,0,280,0,300,0,0,FALSE
+FL - MRB,Almond Croissants,6,6,0,4,0,0,TRUE
+FL - MRB,Apple Turnovers,6,6,0,4,0,0,TRUE
+FL - MRB,Blueberry Muffins,36,36,0,18,0,0,TRUE
+FL - MRB,Chocolate Chip Muffins,36,36,0,18,0,0,TRUE
+FL - MRB,Blueberry Scones,6,3,0,2,0,0,TRUE
+FL - MRB,Raspberry Scones,6,3,0,2,0,0,TRUE
+FL - MRB,Lemon Cheese Danish,6,6,0,4,0,0,TRUE
+FL - MRB,Spinach Feta,16,18,0,8,0,0,TRUE
+FL - Farmington,Blueberry Muffins,0,0,0,8,0,0,TRUE
+FL - Farmington,Chocolate Chip Muffins,0,0,0,8,0,0,TRUE
+FL - Farmington,Cinnamon Muffins,0,0,0,8,0,0,TRUE
+FL - Farmington,Double Chocolate Muffins,0,0,0,8,0,0,TRUE
+FL - Farmington,Lemon Poppy Seed Muffins,0,0,0,8,0,0,TRUE
+FL - Farmington,Pistachio Muffins,0,0,0,8,0,0,TRUE
+FL - Farmington,Cutout Cookies,0,0,0,60,0,0,FALSE
+FL - Farmington,Chocolate Chip Cookies,0,0,0,30,0,0,TRUE
+FL - Farmington,Snicker Doodle Cookies,0,0,0,35,0,0,TRUE
+FL - Farmington,Peanut Butter Cookies,0,0,0,24,0,0,TRUE
+FL - Farmington,M&M Cookies,0,0,0,20,0,0,TRUE
+FL - Farmington,Rice Krispy Treats,0,0,0,20,0,0,TRUE
+FL - Farmington,Fruit Bars,0,0,0,20,0,0,TRUE
+FL - Farmington,Salted Caramel Bars,0,0,0,7,0,0,TRUE
+FL - Farmington,Strawberry Cream Cheese Danish,0,0,0,8,0,0,TRUE
+FL - Pittsford,Blueberry Muffins,0,0,0,28,0,0,TRUE
+FL - Pittsford,Chocolate Chip Muffins,0,0,0,28,0,0,TRUE
+FL - Pittsford,Cinnamon Muffins,0,0,0,28,0,0,TRUE
+FL - Pittsford,Cranberry-Orange Muffins,0,0,0,18,0,0,TRUE
+FL - Pittsford,Lemon Poppy Seed Muffins,0,0,0,28,0,0,TRUE
+FL - Pittsford,Pistachio Muffins,0,0,0,28,0,0,TRUE
+FL - Pittsford,Cutout Cookies,0,0,0,0,0,0,FALSE
+FL - Pittsford,Chocolate Chip Cookies,0,0,0,22,0,0,TRUE
+FL - Pittsford,Snicker Doodle Cookies,0,0,0,22,0,0,TRUE
+FL - Pittsford,Peanut Butter Cookies,0,0,0,22,0,0,TRUE
+FL - Pittsford,M&M Cookies,0,0,0,15,0,0,TRUE
+FL - Pittsford,Rice Krispy Treats,0,0,0,24,0,0,TRUE
+FL - Pittsford,Fruit Bars,0,0,0,24,0,0,TRUE
+FL - Pittsford,Blueberry Scones,0,0,0,18,0,0,TRUE
+FL - Pittsford,Raspberry Scones,0,0,0,18,0,0,TRUE
+FL - Pittsford,Maple Danish,0,0,0,12,0,0,TRUE
+FL - Thompson,Pistachio Muffins,0,24,0,0,0,0,TRUE
+FL - Thompson,Banana Bread,0,24,0,0,0,0,TRUE
+FL - Thompson,Cutout Cookies,0,24,0,0,0,0,FALSE
+Casa,Maple Danish,0,12,0,0,12,0,TRUE
+Casa,Chocolate Chip Cookies,0,0,0,0,24,0,TRUE
+Casa,Cutout Cookies,0,24,0,0,120,0,FALSE

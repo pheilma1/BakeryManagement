@@ -1,0 +1,95 @@
+    {% include "header-nav.html" %}
+    {% include "side-nav.html" %}
+
+<!-- Main Content-->
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Sweet Blessings</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">Labels</li>
+                        </ol>
+                        <div class="row">
+                            <div class="bd-example">
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Recipes</button>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Add Recipe</a></li>
+                                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                </ul>
+                              </div><!-- /btn-group -->
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Suppliers</button>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Add Suppliers</a></li>
+                                  <li><a class="dropdown-item" href="#">View Suppliers</a></li>
+                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                </ul>
+                              </div><!-- /btn-group -->
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Admin</button>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Mileage Log</a></li>
+                                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                </ul>
+                              </div><!-- /btn-group -->
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Forms</button>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Special Order Form</a></li>
+                                  <li><a class="dropdown-item" href="#">Schedule</a></li>
+                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                </ul>
+                              </div><!-- /btn-group -->
+                               <div class="btn-group">
+                                <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Customer Orders</button>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Action</a></li>
+                                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                </ul>
+                              </div><!-- /btn-group -->
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Danger</button>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Action</a></li>
+                                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                </ul>
+                              </div><!-- /btn-group -->
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <h2>Length: {{all_labels|length}}</h2>
+                            <table id="datatablesSimple" class="div-lbl-table">
+                                {% for row in range(0, all_labels|length, 3) %}
+                                    <tr>
+                                        {% for i in range(3) %}
+                                            {% if row + i < all_labels|length %}
+                                                <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                                <td class="div-lbl-table-col">{{ all_labels[row + i].item }}
+                                                    <p>{{ all_labels[row + i].ingredients }}</p>
+                                                </td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </main>
+{% include "footer.html" %}

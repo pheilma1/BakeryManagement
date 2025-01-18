@@ -1,0 +1,228 @@
+    {% include "header-nav.html" %}
+    {% include "side-nav.html" %}
+
+<!-- Main Content-->
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Sweet Blessings</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">Labels</li>
+                        </ol>
+                        <div class="row">
+                            <div class="bd-example">
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Recipes</button>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Add Recipe</a></li>
+                                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                </ul>
+                              </div><!-- /btn-group -->
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Suppliers</button>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Add Suppliers</a></li>
+                                  <li><a class="dropdown-item" href="#">View Suppliers</a></li>
+                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                </ul>
+                              </div><!-- /btn-group -->
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Admin</button>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Mileage Log</a></li>
+                                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                </ul>
+                              </div><!-- /btn-group -->
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Forms</button>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Special Order Form</a></li>
+                                  <li><a class="dropdown-item" href="#">Schedule</a></li>
+                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                </ul>
+                              </div><!-- /btn-group -->
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Customer Orders</button>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Action</a></li>
+                                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                </ul>
+                              </div><!-- /btn-group -->
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Danger</button>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Action</a></li>
+                                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                </ul>
+                              </div><!-- /btn-group -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-4">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        Select Day/Customer
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Customers</button>
+                                            <ul class="dropdown-menu">
+                                              <li><a class="dropdown-item" href="{{ url_for('supplier_item')}}">Fingerlakes Coffee Roasters - Main</a></li>
+                                              <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                              <li><hr class="dropdown-divider"></li>
+                                              <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                            </ul>
+                                        </div><!-- /btn-group -->
+
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Day of Week</button>
+                                            <ul class="dropdown-menu">
+                                                {% for days in all_days %}
+                                                    <li><a class="dropdown-item" href="{{ url_for('select_labels')}}">{{ days.day }}</a></li>
+                                                {% endfor %}
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="#">All</a></li>
+                                            </ul>
+                                        </div><!-- /btn-group -->
+
+                                    </div>
+                                    <div class="card-body">
+<!--                                    <table id="datatablesSimple">-->
+                                        <form action="/select_labels/" method="post" id="select_lbls">
+                                            <div class="form-check div-lbl-table">
+                                                <div class="div-lbl-table-row">
+                                                    <div class="div-lbl-table-col" align="center">Print</div>
+                                                    <div  class="div-lbl-table-col">Customer Name</div>
+                                                    <div  class="div-lbl-table-col">Order Day</div>
+                                                    <div  class="div-lbl-table-col"># Items</div>
+                                                    <div  class="div-lbl-table-col">Total Labels</div>
+                                                </div>
+                                                {% for custs in all_custs %}
+                                                    <div class="div-lbl-table-row">
+                                                        <div class="div-lbl-table-col">
+
+                                                           {% if custs['on'] == "True" %}
+                                                                    <input class="form-check-input" type="checkbox" OnClick="form.submit()" name="{{custs['lbl_form_name']}}" value="" id="flexCheckChecked" checked>
+                                                                    <input type="hidden" name="{{custs['lbl_form_name']}}" value="off">
+                                                                    <label class="form-check-label labels-table-heading-checkbox" for="flexCheckChecked">
+                                                                        {{custs['lbl_form_name']}}
+                                                                    </label>
+                                                            {% else %}
+                                                                    <input class="form-check-input" type="checkbox" OnClick="form.submit()" name="{{custs['lbl_form_name']}}" value="" id="flexCheckDefault" >
+                                                                    <input type="hidden" name="{{custs['lbl_form_name']}}" value="off">
+                                                                    <label class="form-check-label labels-table-heading-checkbox" for="flexCheckDefault">
+                                                                        {{custs['lbl_form_name']}}
+                                                                    </label>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="div-lbl-table-col">{{ custs.location }}</div>
+                                                        <div class="div-lbl-table-col">{{ custs.day }}</div>
+                                                        <div class="div-lbl-table-col">{{ custs.item_qty}}</div>
+                                                        <div class="div-lbl-table-col">{{ custs.lbl_qty }}</div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </form>
+                                    </div>
+<!--                                <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>-->
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar me-1"></i>
+                                        Bar Chart Example
+                                    </div>
+                                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                Labels
+                            </div>
+                            <div class="card-body">
+                                <table id="datatablesSimple" class="label_table">
+                                    <tbody>
+                                    <tr>
+                                      <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                      <td>Almond Croissants
+                                        <p>Wheat Flour, Water, Butter (Cream), Sugar, Almonds, Yeast, Egg Whites, Invert Sugar Syrup, Egg, Salt, Wheat Gluten, Egg Yolks, Ascorbic Acid, Enzyme. Topping: Powdered Sugar. Contains Milk, Egg, Tree Nuts
+                                        </p>
+                                      </td>
+                                      <td> </td>
+                                      <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                      <td>Almond Croissants
+                                        <p>Wheat Flour, Water, Butter (Cream), Sugar, Almonds, Yeast, Egg Whites, Invert Sugar Syrup, Egg, Salt, Wheat Gluten, Egg Yolks, Ascorbic Acid, Enzyme. Topping: Powdered Sugar. Contains Milk, Egg, Tree Nuts
+                                        </p>
+                                      </td>
+                                      <td> </td>
+                                      <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                      <td>Almond Croissants
+                                        <p>Wheat Flour, Water, Butter (Cream), Sugar, Almonds, Yeast, Egg Whites, Invert Sugar Syrup, Egg, Salt, Wheat Gluten, Egg Yolks, Ascorbic Acid, Enzyme. Topping: Powdered Sugar. Contains Milk, Egg, Tree Nuts
+                                        </p>
+                                      </td>
+                                    </tr>
+                                    <tr>
+
+                                    <tr>
+                                      <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                      <td>Apple Turnovers
+                                        <p>Apple Filling (Water, Sugar, Glucose, Evaporated Apples, Modified Corn Starch, Spice, Citric Acid, Sodium Benzoate and Potassium Sorbate (preservatives), Enriched Flour (Wheat Flour, Niacin, Iron, Thiamin Mononitrate, Riboflavin, Folic Acid, Water, Palm Oil, Sugar, Soybean Oil, Salt, Monocalcium Phosphate)
+                                        </p>
+                                      </td>
+                                      <td> </td>
+                                      <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                      <td>Apple Turnovers
+                                        <p>Apple Filling (Water, Sugar, Glucose, Evaporated Apples, Modified Corn Starch, Spice, Citric Acid, Sodium Benzoate and Potassium Sorbate (preservatives), Enriched Flour (Wheat Flour, Niacin, Iron, Thiamin Mononitrate, Riboflavin, Folic Acid, Water, Palm Oil, Sugar, Soybean Oil, Salt, Monocalcium Phosphate)
+                                        </p>
+                                      </td>
+                                      <td> </td>
+                                      <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                      <td>Apple Turnovers
+                                        <p>Apple Filling (Water, Sugar, Glucose, Evaporated Apples, Modified Corn Starch, Spice, Citric Acid, Sodium Benzoate and Potassium Sorbate (preservatives), Enriched Flour (Wheat Flour, Niacin, Iron, Thiamin Mononitrate, Riboflavin, Folic Acid, Water, Palm Oil, Sugar, Soybean Oil, Salt, Monocalcium Phosphate)
+                                        </p>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                      <td>Blueberry Muffins
+                                        <p>Bleached Wheat Flour, Sugar, Eggs, Soybean Oil, Blueberries, Water, Modified Food Starch, Leavening (Baking Soda, Sodium Aluminum Phosphate, Monocalcium Phosphate), Mono and Diglycerides, Natural Flavor, Buttermilk Solids, Salt, Enzyme, Xanthan Gum.
+                                        </p>
+                                      </td>
+                                      <td> </td>
+                                      <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                      <td>Blueberry Muffins
+                                        <p>Bleached Wheat Flour, Sugar, Eggs, Soybean Oil, Blueberries, Water, Modified Food Starch, Leavening (Baking Soda, Sodium Aluminum Phosphate, Monocalcium Phosphate), Mono and Diglycerides, Natural Flavor, Buttermilk Solids, Salt, Enzyme, Xanthan Gum.
+                                        </p>
+                                      </td>
+                                      <td> </td>
+                                      <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                      <td>Blueberry Muffins
+                                        <p>Bleached Wheat Flour, Sugar, Eggs, Soybean Oil, Blueberries, Water, Modified Food Starch, Leavening (Baking Soda, Sodium Aluminum Phosphate, Monocalcium Phosphate), Mono and Diglycerides, Natural Flavor, Buttermilk Solids, Salt, Enzyme, Xanthan Gum.
+                                        </p>
+                                      </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+{% include "footer.html" %}
