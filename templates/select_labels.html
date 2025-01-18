@@ -1,0 +1,335 @@
+    {% include "header-nav.html" %}
+    {% include "side-nav.html" %}
+
+<!-- Main Content-->
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Sweet Blessings</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">Labels</li>
+                        </ol>
+
+                    {% include "main-menu.html" %}
+
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <p>Select Day/Customer</p>
+                                        <p>Notes: Provide a way to print a list of all items for 1 or more customers for the week summarized by <customer>day/item (production requirements)</p>
+                                        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                                                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                                            </div>
+                                        </form>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Print</button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="{{ url_for('select_labels')}}">All Days, All Customers</a></li>
+                                                <li><a class="dropdown-item" href="{{ url_for('select_labels')}}">All Customers for Today</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="{{ url_for('print_labels')}}">Print</a></li>
+                                            </ul>
+
+                                            <a class="btn btn-primary" type="submit" method="post" href="{{ url_for('print_labels')}}" name="print">Print</a>
+                                            <a class="btn btn-danger" type="submit" method="post" href="{{ url_for('print_labels')}}" name="Add">Add</a>
+                                        </div><!-- /btn-group -->
+
+                                    </div>
+
+                                     <div class="card-body">
+                                        <form action="/select_labels/" method="post" id="select_lbls">
+
+                                        <table class="cust_order_tbl table-responsive">
+                                            <thead>
+                                                <tr>
+<!--                                                    <th rowspan="2">Print</th>
+                                                    <th rowspan="2">Customer</th>
+                                                    <th colspan="3">Monday</th>
+                                                    <th colspan="3">Tuesday</th>
+                                                    <th colspan="3">Wednesday</th>
+                                                    <th colspan="3">Thursday</th>
+                                                    <th colspan="3">Friday</th>
+                                                    <th rowspan = "2">Total</th>
+-->
+                                                    <th>Print</th>
+                                                    <th>Customer</th>
+                                                    <th>Monday</th>
+                                                    <th>Tuesday</th>
+                                                    <th>Wednesday</th>
+                                                    <th>Thursday</th>
+                                                    <th>Friday</th>
+                                                    <th>Total</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for cust in cust_orders %}
+                                                <tr>
+                                                    <td>
+                                                       {% if cust['print_lbl'] == "True" %}
+                                                                <input class="form-check-input" type="checkbox" OnClick="form.submit()" name="{{cust.customer}}" value="" id="flexCheckChecked" checked>
+                                                                <input type="hidden" name="{{cust.customer}}" value="off">
+                                                                <label class="form-check-label labels-table-heading-checkbox" for="flexCheckChecked">
+                                                                </label>
+                                                        {% else %}
+                                                                <input class="form-check-input" type="checkbox" OnClick="form.submit()" name="{{cust.customer}}" value="" id="flexCheckDefault" >
+                                                                <input type="hidden" name="{{cust.customer}}" value="off">
+                                                                <label class="form-check-label labels-table-heading-checkbox" for="flexCheckDefault">
+                                                                </label>
+                                                        {% endif %}
+                                                    </td>
+
+                                                    <td>
+                                                        <form method="post" action="/cust_order_items/">
+                                                            <input type="submit" value="{{cust.customer}}" name="updateorder">
+                                                        </form>
+                                                    </td>
+                                                    {% if cust.Monday == '0' %}
+                                                        <td>-</td>
+                                                    {% else %}
+                                                        <td>{{cust.Monday}}</td>
+                                                    {% endif %}
+                                                    {% if cust.Tuesday == '0' %}
+                                                        <td>-</td>
+                                                    {% else %}
+                                                        <td>{{cust.Tuesday}}</td>
+                                                    {% endif %}
+                                                    {% if cust.Wednesday == '0' %}
+                                                        <td>-</td>
+                                                    {% else %}
+                                                        <td>{{cust.Wednesday}}</td>
+                                                    {% endif %}
+                                                    {% if cust.Thursday == '0' %}
+                                                        <td>-</td>
+                                                    {% else %}
+                                                        <td>{{cust.Thursday}}</td>
+                                                    {% endif %}
+                                                    {% if cust.Friday == '0' %}
+                                                        <td>-</td>
+                                                    {% else %}
+                                                        <td>{{cust.Friday}}</td>
+                                                    {% endif %}
+                                                    <td>$10.00</td>
+                                                  </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+<!--                                <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>-->
+                                </div>
+                            </div>
+
+
+
+                        <div class="row">
+                            <div class="col-xl-4">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        Select Day/Customer
+                                        <div class="btn-group">
+                                            <a class="btn btn-primary" type="submit" method="post" href="{{ url_for('print_labels')}}" name="print">Print</a>
+                                            <a class="btn btn-danger" type="submit" method="post" href="{{ url_for('print_labels')}}" name="Add">Add</a>
+                                        </div><!-- /btn-group -->
+
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Day of Week</button>
+                                            <ul class="dropdown-menu">
+                                                {% for days in all_days %}
+                                                    <li><a class="dropdown-item" href="{{ url_for('select_labels')}}">{{ days.day }}</a></li>
+                                                {% endfor %}
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="{{ url_for('print_labels')}}">Print</a></li>
+                                            </ul>
+                                        </div><!-- /btn-group -->
+
+                                    </div>
+                                    <div class="card-body">
+<!--                                    <table id="datatablesSimple">-->
+                                        <form action="/select_labels/" method="post" id="select_lbls">
+                                            <div class="form-check div-lbl-table">
+                                                <div class="div-lbl-table-row">
+                                                    <div  class="div-lbl-select-col">Print</div>
+                                                    <div  class="div-lbl-select-col">Customer</div>
+                                                    <div  class="div-lbl-select-col">Order Day</div>
+                                                    <div  class="div-lbl-select-col"># Items</div>
+                                                    <div  class="div-lbl-select-col">Total Labels</div>
+                                                </div>
+                                                {% for custs in all_custs %}
+                                                    <div class="div-lbl-table-row">
+                                                        <div class="div-lbl-select-col">
+                                                           {% if custs['on'] == "True" %}
+                                                                    <input class="form-check-input" type="checkbox" OnClick="form.submit()" name="{{custs['lbl_form_name']}}" value="" id="flexCheckChecked" checked>
+                                                                    <input type="hidden" name="{{custs['lbl_form_name']}}" value="off">
+                                                                    <label class="form-check-label labels-table-heading-checkbox" for="flexCheckChecked">
+                                                                    </label>
+                                                            {% else %}
+                                                                    <input class="form-check-input" type="checkbox" OnClick="form.submit()" name="{{custs['lbl_form_name']}}" value="" id="flexCheckDefault" >
+                                                                    <input type="hidden" name="{{custs['lbl_form_name']}}" value="off">
+                                                                    <label class="form-check-label labels-table-heading-checkbox" for="flexCheckDefault">
+                                                                    </label>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="div-lbl-select-col">{{ custs.location }}</div>
+                                                        <div class="div-lbl-select-col">{{ custs.day }}</div>
+                                                        <div class="div-lbl-select-col">{{ custs.item_qty}}</div>
+                                                        <div class="div-lbl-select-col">{{ custs.lbl_qty }}</div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </form>
+                                    </div>
+<!--                                <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>-->
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-table me-1"></i>
+                                        <Labels>Labels</Labels>
+                                        <div class="btn-group">
+                                            <a class="btn btn-primary" "div-lbl-btn" type="submit" method="post" href="{{ url_for('print_labels')}}" name="print">Print</a>
+                                        </div><!-- /btn-group -->
+                                    </div>
+                                <div class="card-body">
+                                    <table id="datatablesSimple" class="label_table">
+                                        <tbody>
+                                        <tr>
+                                          <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                          <td>Almond Croissants
+                                            <p>Wheat Flour, Water, Butter (Cream), Sugar, Almonds, Yeast, Egg Whites, Invert Sugar Syrup, Egg, Salt, Wheat Gluten, Egg Yolks, Ascorbic Acid, Enzyme. Topping: Powdered Sugar. Contains Milk, Egg, Tree Nuts
+                                            </p>
+                                          </td>
+                                          <td> </td>
+                                          <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                          <td>Almond Croissants
+                                            <p>Wheat Flour, Water, Butter (Cream), Sugar, Almonds, Yeast, Egg Whites, Invert Sugar Syrup, Egg, Salt, Wheat Gluten, Egg Yolks, Ascorbic Acid, Enzyme. Topping: Powdered Sugar. Contains Milk, Egg, Tree Nuts
+                                            </p>
+                                          </td>
+                                          <td> </td>
+                                          <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                          <td>Almond Croissants
+                                            <p>Wheat Flour, Water, Butter (Cream), Sugar, Almonds, Yeast, Egg Whites, Invert Sugar Syrup, Egg, Salt, Wheat Gluten, Egg Yolks, Ascorbic Acid, Enzyme. Topping: Powdered Sugar. Contains Milk, Egg, Tree Nuts
+                                            </p>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                          <td>Apple Turnovers
+                                            <p>Apple Filling (Water, Sugar, Glucose, Evaporated Apples, Modified Corn Starch, Spice, Citric Acid, Sodium Benzoate and Potassium Sorbate (preservatives), Enriched Flour (Wheat Flour, Niacin, Iron, Thiamin Mononitrate, Riboflavin, Folic Acid, Water, Palm Oil, Sugar, Soybean Oil, Salt, Monocalcium Phosphate)
+                                            </p>
+                                          </td>
+                                          <td> </td>
+                                          <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                          <td>Apple Turnovers
+                                            <p>Apple Filling (Water, Sugar, Glucose, Evaporated Apples, Modified Corn Starch, Spice, Citric Acid, Sodium Benzoate and Potassium Sorbate (preservatives), Enriched Flour (Wheat Flour, Niacin, Iron, Thiamin Mononitrate, Riboflavin, Folic Acid, Water, Palm Oil, Sugar, Soybean Oil, Salt, Monocalcium Phosphate)
+                                            </p>
+                                          </td>
+                                          <td> </td>
+                                          <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                          <td>Apple Turnovers
+                                            <p>Apple Filling (Water, Sugar, Glucose, Evaporated Apples, Modified Corn Starch, Spice, Citric Acid, Sodium Benzoate and Potassium Sorbate (preservatives), Enriched Flour (Wheat Flour, Niacin, Iron, Thiamin Mononitrate, Riboflavin, Folic Acid, Water, Palm Oil, Sugar, Soybean Oil, Salt, Monocalcium Phosphate)
+                                            </p>
+                                          </td>
+                                        </tr>
+
+                                        <tr>
+                                          <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                          <td>Blueberry Muffins
+                                            <p>Bleached Wheat Flour, Sugar, Eggs, Soybean Oil, Blueberries, Water, Modified Food Starch, Leavening (Baking Soda, Sodium Aluminum Phosphate, Monocalcium Phosphate), Mono and Diglycerides, Natural Flavor, Buttermilk Solids, Salt, Enzyme, Xanthan Gum.
+                                            </p>
+                                          </td>
+                                          <td> </td>
+                                          <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                          <td>Blueberry Muffins
+                                            <p>Bleached Wheat Flour, Sugar, Eggs, Soybean Oil, Blueberries, Water, Modified Food Starch, Leavening (Baking Soda, Sodium Aluminum Phosphate, Monocalcium Phosphate), Mono and Diglycerides, Natural Flavor, Buttermilk Solids, Salt, Enzyme, Xanthan Gum.
+                                            </p>
+                                          </td>
+                                          <td> </td>
+                                          <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                          <td>Blueberry Muffins
+                                            <p>Bleached Wheat Flour, Sugar, Eggs, Soybean Oil, Blueberries, Water, Modified Food Starch, Leavening (Baking Soda, Sodium Aluminum Phosphate, Monocalcium Phosphate), Mono and Diglycerides, Natural Flavor, Buttermilk Solids, Salt, Enzyme, Xanthan Gum.
+                                            </p>
+                                          </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                Customer Order & Delivery Schedle
+                                <div class="btn-group">
+                                    <a class="btn btn-primary recipe_lbl_btn" type="submit" method="post" href="{{ url_for('print_labels')}}" name="print">Add Item</a>
+                                </div><!-- /btn-group -->
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Ingredients</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in items %}
+                                        <tr>
+                                            <form method="post" action="">
+                                                <td>
+                                                    <input type="submit" value="{{item.item}}" name="updateitem">
+                                                </td>
+                                            </form>
+
+                                            <td>{{ item.ingredients }}</td>
+
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                Items and Ingredients (Click Item Name to Edit)
+                                <div class="btn-group">
+                                    <a class="btn btn-primary recipe_lbl_btn" type="submit" method="post" href="{{ url_for('print_labels')}}" name="print">Add Item</a>
+                                </div><!-- /btn-group -->
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Ingredients</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in items %}
+                                        <tr>
+                                            <form method="post" action="">
+                                                <td>
+                                                    <input type="submit" value="{{item.item}}" name="updateitem">
+                                                </td>
+                                            </form>
+
+                                            <td>{{ item.ingredients }}</td>
+
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </main>
+{% include "footer.html" %}

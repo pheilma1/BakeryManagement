@@ -5,15 +5,18 @@ from flask_ckeditor import CKEditor
 # from flask_gravatar import Gravatar
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column, join
-from sqlalchemy import Integer, String, Text, func, ForeignKey, Float, DateTime
+from sqlalchemy.orm import  relationship, DeclarativeBase, Mapped, mapped_column, join
+from sqlalchemy import create_engine, Integer, String, Text, func, ForeignKey, Float, DateTime
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Import your forms from the forms.py
 #from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 #import requests
-from forms import SupplierForm, SupplierItemForm, IngredientForm, MileageForm
+from forms import SupplierForm, SupplierItemForm, IngredientForm, MileageForm, CustomerOrderForm
+from labels import get_labels, get_label_summary, get_lbl_ingreds,  get_item_ingreds, get_packaging_labels
+# , get_cust_order_sched, get_cust_order_summary)
+from cust_orders import get_all_cust_order_sched, get_cust_order_summary, get_cust_order_sched
 
 # USE YOUR OWN npoint LINK! ADD AN IMAGE URL FOR YOUR POST. 👇
 
@@ -25,10 +28,21 @@ Bootstrap5(app)
 class Base(DeclarativeBase):
     pass
 
-0
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bakery.db'
+# # Replace with your actual database connection details
+# engine = create_engine("postgresql://postgres:Gray0225pw@localhost/bakery.db")
+#
+# # Create a new database
+# with engine.connect() as connection:
+#     connection.execute("CREATE DATABASE new_database")
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bakery.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Gray0225pw@localhost/bakery.db'
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
+
+
+label_summary = get_label_summary()
+cust_order_summary = get_cust_order_summary()
 
 
 # TODO develop these tables:
@@ -55,6 +69,14 @@ class Suppliers(db.Model):
     items = relationship("SupplierItems", back_populates="supplier_item")
     #TODO define and add additional supplier contact information
 
+#TODO: Separate supplier costs for tracking cost and average cost. Should costs be in an order table? See option below
+# class SupplierCosts(db.Model):
+#   __tablename__ = "supplier_cost"
+#   id: Mapped[int] = mapped_column(Integer, primary_key=True)
+#   supplier_cost_id : Mapped[str] = mapped_column(Integer, ForeignKey("suppliers.id")
+#   cost = relationship("SupplierItems", back_populates="supplier_item_cost")
+#   supplier_cost_date: Mapped[str] = mapped_column(String(250), nullable=False)  #should/cam this be a date field
+
 class SupplierItems(db.Model):
     __tablename__ = "supplier_item"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -69,8 +91,26 @@ class SupplierItems(db.Model):
     supplier_item_uom : Mapped[str] = mapped_column(Text, nullable=False)
     supplier_item_cost: Mapped[float] = mapped_column(Float)
     supplier_cost_updated: Mapped[str] = mapped_column(String(250), nullable=False)
-    ingredient_supplier = relationship("Ingredients", back_populates="supplier_item")
+    ingredient_supplier = relationship( "Ingredients", back_populates="supplier_item")
 
+
+# class SupplierOrders(db.Model):
+#   __tablename__ = "supplier_orders"
+#   id: Mapped[int] = mapped_column(Integer, primary_key=True)
+#   supplier_item_id: Mapped[int] = mapped_column(Integer, ForeignKey('supplier_item.id'))
+#   supplier_item = relationship("SupplierItems", back_populates="ingredient_supplier")
+#   supplier_inv_num = Mapped[str] = mapped_column(Text, nullable=False)
+#   item_order_qty =  Mapped[Int] = mapped_column(Integer)
+#   item_order_cost = Mapped[float] = mapped_column(Float)
+#   order_date: Mapped[str] = mapped_column(String(250), nullable=False)  #should/cam this be a date field
+
+# TODO develop customer orders:
+#   Enable edit of orders
+#   Print customer order summary for production
+#   Allow usage of order to print labels (may have to exclude items (e.g. cutouts)
+
+# A supplier provides items/ingredients that can be ordered and contribute to a recipe. One or more recipes create a sellable item.
+# Sellable items can be ordered by customers.
 
 class Ingredients(db.Model):
     __tablename__ = "ingredients"
@@ -135,6 +175,14 @@ class Item(db.Model):
     # TODO One-to-many relationship to the Recipes
     item_recipe = relationship("Recipes", back_populates="parent_item")
 
+class CustomerOrders(db.Model):
+    __tablename__ = "customer_orders"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    inv_num : Mapped[str] = mapped_column(Text, nullable=False)
+    item_id : Mapped[int] = mapped_column(Integer, ForeignKey('items.id'))
+    item_order_qty : Mapped[int] = mapped_column(Integer)
+    item_order_price : Mapped[float] = mapped_column(Float)
+
 
 class UOMConversion(db.Model):
     __tablename__ = "uom_conversion"
@@ -177,8 +225,12 @@ with app.app_context():
     #      password=generate_password_hash("Gray0225pw!", method='pbkdf2:sha256', salt_length=8)
     # )
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def home():
+
+    if request.method == 'POST':
+        print ("Error - you are in home you need to be somewhere else")
+
     # return render_template("index.html", all_posts=posts)
     result = db.session.execute(db.select(Suppliers))
     suppliers = result.scalars().all()
@@ -469,25 +521,168 @@ def ingredients():
     else:
         return render_template('ingredients.html', all_ingredients=ingredients, form=ingredient_form)
 
+@app.route('/cust_order_items/', methods=['POST', 'GET'])
+def cust_order_items():
+    # cust_order_schedule = get_all_cust_order_sched()
+    cust_order_summary = get_cust_order_summary()
+    cust_order_form = CustomerOrderForm()
+    customer_orders = []
+
+    print("In Customer Order Items")
+    if request.method == 'POST':
+        print("In select cust_orders post")
+
+        # print (request.form.items())
+
+        tmp_data = {}
+        for key, val in request.form.items():
+            print(f"key, val: {key}, {val}")
+            tmp_data[key] = val
+            print(f"tmp_data = {tmp_data}")
+            customer_orders = get_cust_order_sched(val)
+            print(f"customer Orders for {val}: {customer_orders}")
+
+            for items in customer_orders:
+                print (f"items-{items}")
+                cust_order_form.customer_name.data = val
+                cust_order_form.item.data = items['Item']
+                # if items['day'] == 'Monday':
+                cust_order_form.monday_qty.data = items['Monday']
+                # if items['day'] == 'Tuesday':
+                cust_order_form.tuesday_qty.data = items['Tuesday']
+                # if items['day'] == 'Wednesday':
+                cust_order_form.wednesday_qty.data = items['Wednesday']
+                # if items['day'] == 'Thursday':
+                cust_order_form.thursday_qty.data = items['Thursday']
+                # if items['day'] == 'Friday':
+                cust_order_form.friday_qty.data = items['Friday']
+
+            # tuesday_qty = IntegerField('Tuesday', validators=[DataRequired()])
+            # wednesday_qty = IntegerField('Wednesday', validators=[DataRequired()])
+            # thursday_qty = IntegerField('Thursday', validators=[DataRequired()])
+            # friday_qty = IntegerField('Friday', validators=[DataRequired()])
+
+        return render_template("customer_orders.html", form=cust_order_form, cust_orders=cust_order_summary, cust_items=customer_orders)
+        # return redirect(url_for("cust_orders"))
+
+    all_items = get_item_ingreds()
+    # return render_template("customer_orders.html", items=all_items, days=day_list, cust_scheds=cust_order_schedule,
+    #                        form=cust_order_form, cust_orders=cust_order_summary)
+    return render_template("customer_orders.html",form=cust_order_form, cust_orders=cust_order_summary, cust_items=customer_orders)
+
+
+@app.route('/cust_orders/', methods=['POST', 'GET'])
+def cust_orders():
+
+# TODO:
+#   Display the customer's orders for each day, the items and order quantities
+#   who have deliveries for today with a summary of the items and labels
+#   Allow the user to change the day, select/unselect the customers
+#       or select the day and show all customers who have orders for that day
+#       What about printing all labels for all customers for the day? Separate each customer with a row - 1st label has the customer name?
+#   Edit the number of labels for each item (tying this into the customer order would be great.)
+#   Create a printable html file formatted with all the labels.
+#   Maybe show total items and total labels for each item and overall for each customer as a santity check?
+
+    cust_order_schedule = get_all_cust_order_sched()
+    cust_order_summary = get_cust_order_summary()
+    cust_order_form = CustomerOrderForm()
+
+
+    # label_summary = get_label_summary()
+    # print(label_summary)
+    #
+    print ("In Customer Orders")
+    if request.method == 'POST':
+        print("In select cust_orders post")
+
+        # print (request.form.items())
+
+        tmp_data = {}
+        for key, val in request.form.items():
+            print(f"key, val: {key}, {val}")
+            tmp_data[key] = val
+            print(f"tmp_data = {tmp_data}")
+            customer_orders = get_cust_order_sched(val)
+            print (f"customer Orders for {val}: {customer_orders}")
+
+            for items in customer_orders:
+                cust_order_form.customer_name.data = val
+                cust_order_form.item.data = items['item']
+                if items['day'] == 'Monday':
+                    cust_order_form.monday_qty.data = items['order_qty']
+
+            # tuesday_qty = IntegerField('Tuesday', validators=[DataRequired()])
+            # wednesday_qty = IntegerField('Wednesday', validators=[DataRequired()])
+            # thursday_qty = IntegerField('Thursday', validators=[DataRequired()])
+            # friday_qty = IntegerField('Friday', validators=[DataRequired()])
+
+        return redirect(url_for("cust_orders"))
+        # return render_template("select_labels.html", all_custs=label_summary)
+
+    day_list = []
+    cust_list = []
+    # day_dict = {}
+    for x in label_summary:
+        if not day_list:
+            day_dict = {'day': x['day']}
+            day_list.append(day_dict)
+        else:
+            if not any(d['day'] == x['day'] for d in day_list):
+                day_dict = {'day': x['day']}
+                day_list.append(day_dict)
+
+        if not cust_list:
+            cust_dict = {'cust': x['location']}
+            cust_list.append(cust_dict)
+        else:
+            if not any(d['cust'] == x['location'] for d in cust_list):
+                cust_dict = {'cust': x['location']}
+                cust_list.append(cust_dict)
+
+    print (f"day_list: {day_list}")
+    # result = db.session.execute(db.select(Suppliers))
+    # suppliers = result.scalars().all()
+
+
+# if request.method == 'POST':
+# # Then get the data from the form
+# tag = request.form['tag']
+
+    # return render_template("select_labels.html", all_custs=label_summary, all_days = day_list)
+    all_items = get_item_ingreds()
+    return render_template("customer_orders.html",form=cust_order_form, cust_orders=cust_order_summary)
+    # return render_template("customer_orders.html", items=all_items, days=day_list, cust_scheds=cust_order_schedule, form=cust_order_form, cust_orders=cust_order_summary)
+
+
+
 @app.route('/mileage/', methods=['POST', 'GET'])
 def mileage():
     mileage_form = MileageForm()
     result = db.session.execute(db.select(Mileage).order_by(Mileage.mileage_date))
 
     mileage_entries = result.scalars().all()
+    if not mileage_entries:
+        print ("No entries yet")
 
     if mileage_form.validate_on_submit():
+        # error = None
         print("checking mileage")
         # %Y - %m - %d
         # print(f"Date: {date.today().strftime('%B %d, %Y')}"),
-        print(f"Date: {mileage_form.date.data}"),
+        print(f"Date: {mileage_form.mileage_date.data}"),
 
         print(f"Starting: {mileage_form.starting_mileage.data}"),
         print(f"Ending:{mileage_form.ending_mileage.data}"),
         # mileage_date = (datetime.strptime(mileage_form.date, %Y-%m-%d)),
 
-        mileage_str = str(mileage_form.date.data)
+        mileage_str = str(mileage_form.mileage_date.data)
         print (mileage_str)
+        if mileage_form.starting_mileage.data > mileage_form.ending_mileage.data:
+            flash('Ending Milage Starting Mileage', 'error')
+            # error = "Ending Mileage > Starting Mileage"
+            return (redirect(url_for('mileage')))
+
         new_mileage_log = Mileage(
             mileage_date=(datetime.strptime(mileage_str, "%Y-%m-%d")),
             # datetime.strptime(datetime_str,
@@ -502,9 +697,10 @@ def mileage():
         db.session.commit()
         return (redirect(url_for('mileage')))
     else:
+        total_mileage = 0
         for entry in mileage_entries:
-            print (f"Mileage entry: {entry.mileage_date}, {entry.starting_mileage}, {entry.ending_mileage}, {entry.distance}")
-
+            # print (f"Mileage entry: {entry.mileage_date}, {entry.starting_mileage}, {entry.ending_mileage}, {entry.distance}")
+            total_mileage = total_mileage + (entry.ending_mileage - entry.starting_mileage)
             # curr_date = datetime.strptime("%y_%m_%d", localtime(time.time()))
             curr_date = datetime.today().date()
             print (f"curr date {curr_date}")
@@ -516,8 +712,123 @@ def mileage():
             #     form.email.data = my_user.email
             #     # and on
 
-        mileage_form.date = curr_date
-        return render_template('mileage.html', mileage_entries=mileage_entries, form=mileage_form)
+        # mileage_form.set_starting_mileage(entry.ending_mileage)
+        # print (f"total miles = {total_mileage}")
+        if not mileage_entries:
+            mileage_form.starting_mileage.data=0
+        else:
+            mileage_form.starting_mileage.data=entry.ending_mileage
+        # mileage_form.mileage_date = curr_date
+        return render_template('mileage.html', mileage_entries=mileage_entries, form=mileage_form, total_miles=total_mileage)
+
+@app.route('/select_labels/', methods=['POST', 'GET'])
+def select_labels():
+
+# TODO:
+#   Display the customers who have deliveries for today with a summary of the items and labels
+#   Allow the user to change the day, select/unselect the customers
+#       or select the day and show all customers who have orders for that day
+#       What about printing all labels for all customers for the day? Separate each customer with a row - 1st label has the customer name?
+#   Edit the number of labels for each item (tying this into the customer order would be great.)
+#   Create a printable html file formatted with all the labels.
+#   Maybe show total items and total labels for each item and overall for each customer as a santity check?
+
+    # label_summary = get_label_summary()
+    # print(label_summary)
+    #
+    # cust_order_schedule = get_all_cust_order_sched()
+    # cust_order_summary = get_cust_order_summary()
+    print (f"cust_order_summary: {cust_order_summary}")
+    # cust_order_form = CustomerOrderForm()
+
+    print ("In select labels")
+    if request.method == 'POST':
+        print("In select labels post")
+        # print (request.form.items())
+
+        tmp_data = {}
+        for key, val in request.form.items():
+            print(f"key, val: {key}, {val}")
+            tmp_data[key] = val
+            print(f"tmp_data = {tmp_data}")
+
+            for custs in cust_order_summary:
+                if custs["customer"] == key: #or racedict["league"] == key or racedict['section'] == key:
+                    print("checking if it's on or off")
+                    if val=="off":
+                        if custs["print_lbl"] == "True":
+                            print("Changing to False")
+                            custs["print_lbl"] = 'False'
+                    else:
+                        if custs["print_lbl"] == "False":
+                            print("Changing to True")
+                            custs["print_lbl"] = 'True'
+
+        return redirect(url_for("select_labels"))
+        # return render_template("select_labels.html", all_custs=label_summary)
+
+    day_list = []
+    # day_dict = {}
+    for x in label_summary:
+        if not day_list:
+            day_dict = {'day': x['day']}
+            day_list.append(day_dict)
+        else:
+            if not any(d['day'] == x['day'] for d in day_list):
+                day_dict = {'day': x['day']}
+                day_list.append(day_dict)
+    #
+    # print (f"day_list: {day_list}")
+    # result = db.session.execute(db.select(Suppliers))
+    # suppliers = result.scalars().all()
+
+
+# if request.method == 'POST':
+# # Then get the data from the form
+# tag = request.form['tag']
+
+    # return render_template("select_labels.html", all_custs=label_summary, all_days = day_list)
+    all_items = get_item_ingreds()
+    return render_template("select_labels.html", all_custs=label_summary, items=all_items, days=day_list, cust_orders=cust_order_summary)
+
+@app.route('/print_labels/', methods=['POST', 'GET'])
+def print_labels():
+    print("entered print labels 3")
+    for labels in label_summary:
+        print (f"{labels['location']}, {labels['day']}, {labels['on']}")
+
+    # lbls_to_print = get_lbl_ingreds(label_summary)
+    #TODO only get the packaging and item labels if the parameter is set
+    packaging_labels = get_packaging_labels(cust_order_summary)
+    print ( f"packaging labels = {packaging_labels}")
+    lbls_to_print = get_lbl_ingreds(cust_order_summary)
+    print (f" total labels {len(lbls_to_print)}")
+    print(lbls_to_print)
+
+    return render_template("print_lbls.html", all_labels=lbls_to_print)
+    # return redirect(url_for("select_labels"))
+
+@app.route('/labels/', methods=['POST', 'GET'])
+def labels():
+
+# TODO:
+#   Select the customer (use today as the default?)
+#       or select the day and show all customers who have orders for that day
+#       What about printing all labels for all customers for the day? Separate each customer with a row - 1st label has the customer name?
+#   Edit the number of labels for each item (tying this into the customer order would be great.)
+#   Create a printable html file formatted with all the labels.
+#   Maybe show total items and total labels for each item and overall for each customer as a santity check?
+
+    labels = get_labels()
+    print (labels)
+
+    # result = db.session.execute(db.select(Suppliers))
+    # suppliers = result.scalars().all()
+    return render_template("labels.html", all_labels=labels)
+
+@app.template_filter('length')
+def length(s):
+    return len(s)
 
 
 if __name__ == "__main__":

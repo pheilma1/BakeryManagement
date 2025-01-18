@@ -1,0 +1,19 @@
+h1, h2 {
+    color: blueviolet;
+}
+
+.cust_order_tbl td {
+    padding-right: 40px;
+}
+.cust_order_tbl th {
+    padding-right: 40px;
+}
+
+
+.recipe_tbl > tfoot {
+    text-align: right;
+}
+
+.recipe_lbl_btn {
+    float: right;
+}

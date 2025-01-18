@@ -3,7 +3,7 @@ from wtforms import StringField, SubmitField, PasswordField, FieldList, FormFiel
 from wtforms.validators import DataRequired, URL, Email
 from wtforms.fields import DateField
 from flask_ckeditor import CKEditorField
-
+from datetime import date
 
 class SupplierForm(FlaskForm):
     supplier = StringField('Supplier Name', validators=[DataRequired()])
@@ -85,9 +85,47 @@ class CommentForm(FlaskForm):
 class MileageForm(FlaskForm):
     # item_name = StringField('Item Name', validators=[DataRequired()])
     # date = DateField('Date', format='%m/%d/%y') #, validators=[DataRequired()])
-    date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
+    mileage_date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
     starting_mileage = IntegerField('Starting Mileage', validators=[DataRequired()])
     ending_mileage = IntegerField('Ending Mileage', validators=[DataRequired()])
     submit = SubmitField(label="Save Mileage")
+
+
+#TODO: May need to add starting mileage into the INIT in order for it to be seen in the form.
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.mileage_date.data:
+            self.mileage_date.data = date.today()
+
+    def set_starting_mileage(self, value):
+        self.starting_mileage = value
+
+#TODO need a way to change the customer name?
+# Customer Name, Day, Items, Quantities
+
+#TODO The form needs to show the item name and the order quantity.
+# Allow the items/order qty to be copied and applied to another day
+# how do they add a new item to the order? Add a button in the header - add item then a pop-up with checkboxes to add multiple items
+class CustomerOrderForm(FlaskForm):
+#    supplier_name = SelectField('Choose a supplier',  [DataRequired()], coerce=str)
+    customer_name = StringField('Customer', validators=[DataRequired()])
+    item = StringField('Item Name', validators=[DataRequired()])
+    monday_qty = IntegerField('Monday', validators=[DataRequired()])
+    tuesday_qty = IntegerField('Tuesday', validators=[DataRequired()])
+    wednesday_qty = IntegerField('Wednesday', validators=[DataRequired()])
+    thursday_qty = IntegerField('Thursday', validators=[DataRequired()])
+    friday_qty = IntegerField('Friday', validators=[DataRequired()])
+    # supitem_number = StringField('Item Number')
+    # supitem_size = DecimalField('Size', validators=[DataRequired()])
+    # supitem_uom = StringField('UOM (e.g. weight)', validators=[DataRequired()])
+    # supitem_cost = DecimalField('Cost', places=2)
+    # submit = SubmitField(label="Add Item")
+
+class OrderScheduleForm(FlaskForm):
+    customer_name = StringField('Supplier Name', validators=[DataRequired()])
+    #TODO Is it possible to select days in a checkbox format and items too?
+    order_day = StringField('Item Name', validators=[DataRequired()])
+    customer_name = StringField('Supplier Name', validators=[DataRequired()])
+
 
 

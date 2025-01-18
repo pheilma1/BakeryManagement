@@ -1,0 +1,284 @@
+{% from "bootstrap5/form.html" import render_form %}
+    {% include "header-nav.html" %}
+    {% include "side-nav.html" %}
+
+<!-- Main Content-->
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Sweet Blessings</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">Customers</li>
+                        </ol>
+
+                    {% include "main-menu.html" %}
+
+                            <div class="row">
+                            <div class="col-xl-12">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <p>Select Day/Customer</p>
+                                        <p>Notes: Provide a way to print a list of all items for 1 or more customers for the week summarized by <customer>day/item (production requirements)</p>
+                                        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                                                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                                            </div>
+                                        </form>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Print</button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="{{ url_for('select_labels')}}">All Days, All Customers</a></li>
+                                                <li><a class="dropdown-item" href="{{ url_for('select_labels')}}">All Customers for Today</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="{{ url_for('print_labels')}}">Print</a></li>
+                                            </ul>
+
+                                            <a class="btn btn-primary" type="submit" method="post" href="{{ url_for('print_labels')}}" name="print">Print</a>
+                                            <a class="btn btn-danger" type="submit" method="post" href="{{ url_for('print_labels')}}" name="Add">Add</a>
+                                        </div><!-- /btn-group -->
+
+                                    </div>
+
+                                     <div class="card-body">
+                                        <table class="cust_order_tbl table-responsive">
+                                            <thead>
+                                                <tr>
+                                                    <th rowspan="2">Customer</th>
+                                                    <th>
+                                                        <form method="post" action="/cust_order_items/">
+                                                            <input type="submit" value="Monday" name="selectday">
+                                                        </form>
+                                                    </th>
+                                                    <th>
+                                                        <form method="post" action="/cust_order_items/">
+                                                            <input type="submit" value="Tuesday" name="selectday">
+                                                        </form>
+                                                    </th>
+                                                    <th>
+                                                        <form method="post" action="/cust_order_items/">
+                                                            <input type="submit" value="Wednesday" name="selectday">
+                                                        </form>
+                                                    </th>
+                                                    <th>
+                                                        <form method="post" action="/cust_order_items/">
+                                                            <input type="submit" value="Thursday" name="selectday">
+                                                        </form>
+                                                    </th>
+                                                    <th>
+                                                        <form method="post" action="/cust_order_items/">
+                                                            <input type="submit" value="Friday" name="selectday">
+                                                        </form>
+                                                    </th>
+<!----------------------------------------------------
+                                                    <th colspan="3">Monday</th>
+                                                    <th colspan="3">Tuesday</th>
+                                                    <th colspan="3">Wednesday</th>
+                                                    <th colspan="3">Thursday</th>
+                                                    <th colspan="3">Friday</th>
+-->
+                                                    <th rowspan = "2">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for cust in cust_orders %}
+                                                <tr>
+                                                    <td>
+                                                        <form method="post" action="/cust_order_items/">
+                                                            <input type="submit" value="{{cust.customer}}" name="updateorder">
+                                                        </form>
+                                                    </td>
+                                                    {% if cust.Monday == '0' %}
+                                                        <td>-</td>
+                                                    {% else %}
+                                                        <td>{{cust.Monday}}</td>
+                                                    {% endif %}
+                                                    {% if cust.Tuesday == '0' %}
+                                                        <td>-</td>
+                                                    {% else %}
+                                                        <td>{{cust.Tuesday}}</td>
+                                                    {% endif %}
+                                                    {% if cust.Wednesday == '0' %}
+                                                        <td>-</td>
+                                                    {% else %}
+                                                        <td>{{cust.Wednesday}}</td>
+                                                    {% endif %}
+                                                    {% if cust.Thursday == '0' %}
+                                                        <td>-</td>
+                                                    {% else %}
+                                                        <td>{{cust.Thursday}}</td>
+                                                    {% endif %}
+                                                    {% if cust.Friday == '0' %}
+                                                        <td>-</td>
+                                                    {% else %}
+                                                        <td>{{cust.Friday}}</td>
+                                                    {% endif %}
+                                                    <td>$10.00</td>
+                                                  </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+<!--                                <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>-->
+                                </div>
+                            </div>
+<!------------------------------------------------------------------------------------------>
+                                {% if form.customer_name.data != None %}
+                                    <div class="card mb-4">
+                                        <div class="card-header">
+                                            {{form.customer_name.data}} - Schedule
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Print</button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="{{ url_for('select_labels')}}">All Days, All Customers</a></li>
+                                                    <li><a class="dropdown-item" href="{{ url_for('select_labels')}}">All Customers for Today</a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li><a class="dropdown-item" href="{{ url_for('print_labels')}}">Print</a></li>
+                                                </ul>
+
+                                                <a class="btn btn-primary" type="submit" method="post" href="{{ url_for('print_labels')}}" name="print">Print</a>
+                                                <a class="btn btn-danger" type="submit" method="post" href="{{ url_for('print_labels')}}" name="Add">Add Item</a>
+                                            </div><!-- /btn-group -->
+                                        </div>
+
+                                        <div class="card-body">
+                                            <table class="cust_order_tbl table-responsive">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Item</th>
+                                                        <th>M</th>
+                                                        <th>T</th>
+                                                        <th>W</th>
+                                                        <th>Th</th>
+                                                        <th>F</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for cust_item in cust_items %}
+                                                    <tr>
+                                                        <td>{{cust_item.Item}}</td>
+                                                        <td>
+                                                            <input size="3" value={{cust_item.Monday}} type="text" />
+                                                        </td>
+                                                        <td>
+                                                            <input size="3" value={{cust_item.Tuesday}} type="text" />
+                                                        </td>
+                                                        <td>
+                                                            <input size="3" value={{cust_item.Wednesday}} type="text" />
+                                                        </td>
+                                                        <td>
+                                                            <input size="3" value={{cust_item.Thursday}} type="text" />
+                                                        </td>
+                                                        <td>
+                                                            <input size="3" value={{cust_item.Friday}} type="text" />
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+    <!--                                <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>-->
+                                    </div>
+                                {% endif %}
+
+<!-------------------------------------------------------------------------------------------->
+                            <div class="col-xl-4">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar me-1"></i>
+                                        {{form.customer_name.label}} - Add Items
+                                    </div>
+                                    <div class="div-lbl-table"
+                                        <form method="post" action="/customer_item">
+                                            <div class="card-body">
+                                                <div class="row no-gutters div-lbl-table-row">
+                                                    <div class="col col-form-label div-cust-tbl-col">
+                                                        {{form.item.label}}
+                                                        {{form.monday_qty.label}}
+                                                        {{form.tuesday_qty.label}}
+                                                        {{form.wednesday_qty.label}}
+                                                        {{form.thursday_qty.label}}
+                                                        {{form.friday_qty.label}}
+                                                    </div>
+                                                    <div class="col col-form-label div-cust-tbl-col">
+                                                        {{form.monday_qty.label}}
+                                                    </div>
+                                                    <div class="col col-form-label div-cust-tbl-col">
+                                                        {{form.tuesday_qty.label}}
+                                                    </div>
+                                                    <div class="col col-form-label div-cust-tbl-col">
+                                                        {{form.wednesday_qty.label}}
+                                                    </div>
+                                                    <div class="col col-form-label div-cust-tbl-col">
+                                                        {{form.thursday_qty.label}}
+                                                    </div>
+                                                    <div class="col col-form-label div-cust-tbl-col">
+                                                        {{form.friday_qty.label}}
+                                                    </div>
+                                                        {{ form.customer_name }}
+                                                    </div>
+                                                </div>
+                                                <div class="row no-gutters">
+                                                    <div class="col col-form-label">
+                                                        {{ form.monday_qty }}
+                                                    </div>
+                                                </div>
+                                                <div class="row no-gutters" >
+                                                    <div class="col col-form-label">
+                                                        {{form.tuesday_qty.label}}
+                                                    </div>
+                                                    <div class="col col-form-label">
+                                                        {{ form.tuesday_qty }}
+                                                    </div>
+                                                </div>
+                                                <div class="row no-gutters">
+                                                    <div class="col col-form-label">
+                                                        {{form.wednesday_qty.label}}
+                                                    </div>
+                                                    <div class="col col-form-label">
+                                                        {{form.wednesday_qty}}
+                                                    </div>
+                                               </div>
+                                               <div class="row no-gutters">
+                                                    <div class="col col-form-label">
+                                                        {{form.thursday_qty.label}}
+                                                    </div>
+                                                    <div class="col col-form-label">
+                                                        {{form.thursday_qty}}
+                                                    </div>
+                                               </div>
+                                               <div class="row no-gutters">
+                                                    <div class="col col-form-label">
+                                                        {{form.friday_qty.label}}
+                                                    </div>
+                                                    <div class="col col-form-label">
+                                                        {{form.friday_qty}}
+                                                    </div>
+                                                </div>
+                                               <div class="row no-gutters">
+                                                 {{form.submit}}
+                                                </div>
+                                            </div>
+                                            {{form.csrf_token}}
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                Items and Ingredients (Click Item Name to Edit)
+                                <div class="btn-group">
+                                    <a class="btn btn-primary recipe_lbl_btn" type="submit" method="post" href="{{ url_for('print_labels')}}" name="print">Add Item</a>
+                                </div><!-- /btn-group -->
+                            </div>
+                            <div class="card-body">
+                            </div>
+                        </div>
+
+                    </div>
+                </main>
+{% include "footer.html" %}

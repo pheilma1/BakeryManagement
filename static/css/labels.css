@@ -1,0 +1,166 @@
+@page {
+    size: auto;
+    /* the margin has to be set to 0 to avoid printing the url and date/time. Use <TR class="div-lbl-tbl-spacer-row" to push the 1st row down */
+    margin: 0mm;
+/*    margin-top: 20mm;
+    margin-left:0mm;
+    margin-right:0mm; */
+ }
+
+.div-lbl-table {
+  display: table;
+  width: auto;
+/*  background-color: #eee; */
+  border: 0;
+/*  1px solid #666666;
+  border-spacing: 5px;  */ /* cellspacing:poor IE support for  this */
+}
+.div-lbl-table-row {
+  display: table-row;
+  height: 96px;
+  width: auto;
+  clear: both;
+}
+.div-lbl-tbl-spacer-row {
+    height: 48px;
+}
+
+.div-lbl-select-col {
+/*  float: left; /* fix for  buggy browsers */
+  display: table-column;
+  float: left;
+/*  margin: 0 auto; */
+  width: 90px;
+/*  text-align: center; */
+/*  background-color: #ccc;  */
+}
+
+.div-lbl-table-col {
+  float: left; /* fix for  buggy browsers */
+  display: table-column;
+/*  height: 90px; */
+  width: 180px;
+  font-size: 6px;
+  text-align: center;
+/*  background-color: #ccc;  */
+}
+
+.div-lbl-tbl-spacer-col {
+  float: left;
+  display: table-column;
+/*  height: 90px; */
+  width: 35px;
+}
+
+.div-cust-tbl-col {
+  float: left; /* fix for  buggy browsers */
+  display: table-column;
+  height: 100px;
+  width: auto;
+/*  font-size: 8px; */
+  text-align: center;
+}
+
+.div-lbl-btn {
+    align: right;
+}
+
+.label_table th {
+    font-size : 20px;
+    color : red;
+}
+
+table.fixed {table-layout:fixed; width:90px;}/*Setting the table width is important!*/
+table.fixed td {overflow:hidden;}/*Hide text outside the cell.*/
+table.fixed td:nth-of-type(1) {width:20px;}/*Setting the width of column 1.*/
+table.fixed td:nth-of-type(2) {width:30px;}/*Setting the width of column 2.*/
+table.fixed td:nth-of-type(3) {width:40px;}/*Setting the width of column 3.*/
+
+/*Setting the table width is important!*/
+table label_table {
+    table-layout:fixed;
+    border: 1px solid yellow;
+    width: 100%;
+}
+
+/*Hide text outside the cell.*/
+table.label_table td {
+    overflow:hidden;
+    height: 100px;
+    padding: 0px;
+    text-align: left;
+    font-size: 6px;
+/*    border: 1px solid black; */
+/*    border-radius-right: 25; */
+    border-collapse: collapse;
+}
+
+table.label_table img {
+    width: 60px;
+}
+/*Setting the width of column 1.*/
+table.label_table td:nth-of-type(1) {
+    width:60px;
+    text-align: center;
+    border-right: 0;
+}
+table.label_table td:nth-of-type(2) {
+    width:190px;
+    text-align: center;
+    border-left: 0;
+}
+/*Setting the width of column 2.*/x
+table.label_table td:nth-of-type(3) {
+    width:10px;
+    border: 0;
+
+}
+
+table.label_table td:nth-of-type(4) {
+    width:60px;
+    text-align: center;
+    border-right: 0;
+}
+/*Setting the width of column 3.*/
+table.label_table td:nth-of-type(5) {
+    width:190px;
+    text-align: center;
+    border-left: 0;
+}
+/*Setting the width of column 2.*/
+table.label_table td:nth-of-type(6) {
+    width:10px;
+    border: 0;
+
+}
+table.label_table td:nth-of-type(7) {
+    width:50px;
+    text-align: center;
+    border-right: 0;
+}
+/*Setting the width of column 2.*/
+table.label_table td:nth-of-type(8) {
+    width:190px;
+    text-align:center;
+    border-left: 0;
+}
+
+/*
+th {
+    height: 70px;
+    padding: 15px;
+    text-align: left;
+    font-size: 20px;
+}
+*/
+
+/* put the css in here for printing */
+@media print {
+  .next-page { page-break-before: always; }
+  .div-lbl-tbl-spacer-row { margin-top: 100px; }
+}
+
+
+.labels-table-heading-checkbox {
+  padding-left: 1.75rem;
+}

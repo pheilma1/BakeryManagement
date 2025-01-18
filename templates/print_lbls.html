@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Sweet Blessings Recipe Management</title>
+        {% block styles %}
+        <!-- Load Boostrap-Flask CSS here -->
+        {{ bootstrap.load_css() }}
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <link href="{{ url_for('static', filename='css/labels.css') }}" rel="stylesheet" />
+        {% endblock %}
+    </head>
+    <body class="sb-nav-fixed">
+                <main>
+                    <div class="container-fluid px-4">
+                        <div class="card-body">
+                            <table id="datatablesSimple" class="div-lbl-table">
+                                <tr class="div-lbl-tbl-spacer-row"></tr>
+                                {% for row in range(0, all_labels|length, 3) %}
+                                    <!-- <tr class="div-lbl-table-row"> -->
+                                        {% if row % 30 or row == 0 %}
+                                            <tr class="div-lbl-table-row">
+                                        {% else %}
+                                            <tr class="next-page div-lbl-tbl-spacer-row"></tr>
+                                            <tr class="div-lbl-table-row">
+                                        {% endif %}
+                                        {% for i in range(3) %}
+                                            {% if row + i < all_labels|length %}
+                                                <td><img src="../static/assets/img/LOGO.jpg"></td>
+                                                <td class="div-lbl-table-col">{{row}}, {{ all_labels[row + i].item }}
+                                                    <p>{{ all_labels[row + i].ingredients }}</p>
+                                                </td>
+                                                {% if i < 2 %}
+                                                    <td class="div-lbl-tbl-spacer-col"></td>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                   </main>
+{% include "footer.html" %}
